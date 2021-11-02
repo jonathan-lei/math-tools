@@ -16,9 +16,9 @@
          </blockquote>
          <p><b>Directions:</b> Press the down key to grade your response. Press the right key to generate a new problem. This will only work if you get the question correct. <b>Aim for speed <i>and</i> accuracy</b>. Good luck!</p>
          <p><b>Note:</b> You can use negatives, e.g. -22, and the problem will assume that it's -sin(22&deg;) instead of sin(-22&deg;). </p>
-         <p><b>About:</b> This website is developed by Jonathan in HTML and JavaScript. All processing is done client-side. This site utilizes the BootStrap CSS library.</p>
+         <p><b>About:</b> This website is developed by Jonathan in HTML, CSS and JavaScript. All processing is done client-side. This site utilizes the BootStrap CSS library. <a href="https://github.com/jonathan-lei/math-tools" target="_blank">View source.</a></p>
          <hr>
-         <p>Enter the correct reference angle for correct operation for <b id="problemMeasure"></b><span id="problemMode"></span></p>
+         <p>Enter the correct reference angle for <b><span id="problemType2"></span>(<b id="problemMeasure"></b><span id="problemMode"></span>)</b></p>
          <span id="problemType"></span>(<input type="text" id="response"> <span id="problemMode2"></span>) <a href="javascript:gradeProblem()" class="btn btn-primary">Grade Problem</a> <a href="javascript:setNewProblem()" class="btn btn-secondary">Next Problem</a>
          <div class="alert alert-success mt-4 d-none" role="alert" id="smartAlert">
             Yes! You're smart! A true honors student. Now solve another problem. 
@@ -63,7 +63,7 @@
                  return;
                }
                value = value.replace("-","");
-               if(parseInt(value)==degrees){
+               if(Math.abs(parseInt(value))==degrees){
                  document.getElementById("smartAlert").classList.toggle("d-none");
                  correct = true;
                  return;
@@ -79,11 +79,11 @@
                  correct = false;
                  return;
                }
-               else if(problemType=="Cos" && !value.includes("-")){
+               else if(problemType=="Cos" && !value.includes("-") && !isNegative){
                  document.getElementById("stupidAlert").classList.toggle("d-none");
                  correct = false;
                  return;
-               }else if(problemType=="Sin" && value.includes("-")){
+               }else if(problemType=="Sin" && value.includes("-") && !isNegative){
                  document.getElementById("stupidAlert").classList.toggle("d-none");
                  correct = false;
                  return;
@@ -174,10 +174,11 @@
            document.getElementById("stupidAlert").classList.add("d-none");
            problemType = getRandomInt(2)==1 ? "Sin" : "Cos"; 
            document.getElementById("problemType").innerHTML=problemType;
+           document.getElementById("problemType2").innerHTML=problemType;
            problemMode = getRandomInt(2)==1 ? "Degrees" : "Radians";
            document.getElementById("problemMode2").innerHTML= problemMode == "Radians" ? "&#215; &#960; Radians" : "&deg; Degrees";
-           // isNegative = getRandomInt(2)==1 ? true : false;
-           isNegative = false;
+           isNegative = getRandomInt(2)==1 ? true : false;
+           
            if(problemMode=="Radians"){
              radiansNumerator = getRandomInt(12);
              radiansDenominator = getRandomInt(4)+3;
@@ -187,9 +188,9 @@
              }
              document.getElementById("problemMode").innerHTML = (isNegative ? "-" : "") + radiansNumerator + "&#960;/" + radiansDenominator + " Radians";
            }else{
-             degrees = getRandomInt(360)-1;
+             degrees = getRandomInt(360);
            	while(degrees % 90 == 0){
-               degrees = getRandomInt(360)-1;
+               degrees = getRandomInt(360);
              }
              document.getElementById("problemMode").innerHTML = (isNegative ? "-" : "") + degrees + "&deg; Degrees";
            }
