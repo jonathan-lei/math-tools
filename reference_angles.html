@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <title>Trigonometry Math Practice</title>
+      <!-- CSS only -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   </head>
+   <body onload="setNewProblem()">
+      <div class="container pt-4">
+         <h1>Trigonometry Math Practice</h1>
+         <h2>Sine and cosine reference angle practice</h2>
+         <p>By Jonathan</p>
+         <blockquote class="blockquote bg-light py-4 px-3">
+            <p class="mb-0 pb-4"><i>"Unlimited Math Fun!"</i></p>
+            <footer class="blockquote-footer">Se&#241;or Juan</footer>
+         </blockquote>
+         <p><b>Directions:</b> Press the down key to grade your response. Press the right key to generate a new problem. This will only work if you get the question correct. <b>Aim for speed <i>and</i> accuracy</b>. Good luck!</p>
+         <p><b>Note:</b> You can use negatives, e.g. -22, and the problem will assume that it's -sin(22&deg;) instead of sin(-22&deg;). </p>
+         <p><b>About:</b> This website is developed by Jonathan in HTML and JavaScript. All processing is done client-side. This site utilizes the BootStrap CSS library.</p>
+         <hr>
+         <p>Enter the correct reference angle for correct operation for <b id="problemMeasure"></b><span id="problemMode"></span></p>
+         <span id="problemType"></span>(<input type="text" id="response"> <span id="problemMode2"></span>) <a href="javascript:gradeProblem()" class="btn btn-primary">Grade Problem</a> <a href="javascript:setNewProblem()" class="btn btn-secondary">Next Problem</a>
+         <div class="alert alert-success mt-4 d-none" role="alert" id="smartAlert">
+            Yes! You're smart! A true honors student. Now solve another problem. 
+         </div>
+         <div class="alert alert-danger mt-4 d-none" role="alert" id="stupidAlert">
+            No! You're stupid! What an idiot! Minus 27! Try again! 
+         </div>
+      </div>
+      <script>
+         var problemMode = "Radians";
+         var problemType = "Cos";
+         var radiansNumerator = 0;
+         var radiansDenominator = 0;
+         var degrees = 0;
+         var isNegative = false;
+         var correct = false;
+         var value = "";
+         
+         function getRandomInt(max) {
+           return Math.floor(Math.random() * max);
+         }
+         
+         function gradeProblem(){
+           value = document.getElementById("response").value;
+           document.getElementById("smartAlert").classList.add("d-none");
+           document.getElementById("stupidAlert").classList.add("d-none");
+           
+           if(problemMode=="Radians"){
+             value = String(eval(value) * 180);
+             degrees = radiansNumerator * 180 / radiansDenominator;
+           }
+         
+             if(degrees < 90){
+               if(isNegative && problemType=="Sin" && !value.includes("-")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               if(isNegative && problemType=="Cos" && value.includes("-")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               value = value.replace("-","");
+               if(parseInt(value)==degrees){
+                 document.getElementById("smartAlert").classList.toggle("d-none");
+                 correct = true;
+                 return;
+               }else if(degrees < 90 && parseInt(value)!=degrees){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+             }else if(degrees >= 90 && degrees < 180 && 180-Math.abs(parseInt(value))==degrees){
+               // Measure is correct
+               if(isNegative && !value.includes("-")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               else if(problemType=="Cos" && !value.includes("-")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }else if(problemType=="Sin" && value.includes("-")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }else{
+                 document.getElementById("smartAlert").classList.toggle("d-none");
+                 correct = true;
+                 return;
+               }
+             }else if(degrees >= 90 && degrees < 180 && 180-Math.abs(parseInt(value))!=degrees){
+               // Measure is wrong
+               document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+               return;
+             }
+             else if(degrees >= 180 && degrees < 270 && !isNegative){
+               if(!value.includes("-")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               if(Math.abs(parseInt(value))+180!=degrees){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               else{
+                 document.getElementById("smartAlert").classList.toggle("d-none");
+                 correct = true;
+                 return;
+               }  
+             }
+             else if(degrees >= 180 && degrees < 270 && isNegative){
+               if((!value.includes("-") && problemType=="Cos") || (value.includes("-") && problemType=="Sin")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               if(Math.abs(parseInt(value))+180!=degrees){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               else{
+                 document.getElementById("smartAlert").classList.toggle("d-none");
+                 correct = true;
+                 return;
+               }  
+             }
+             else if(degrees >= 270 && degrees <= 360 && !isNegative){
+               if((value.includes("-") && problemType=="Cos") || (!value.includes("-") && problemType=="Sin")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               if(360-Math.abs(parseInt(value))!=degrees){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               else{
+                 document.getElementById("smartAlert").classList.toggle("d-none");
+                 correct = true;
+                 return;
+               }  
+             }
+             else if(degrees >= 270 && degrees < 360 && isNegative){
+               if(value.includes("-")){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               if(360-Math.abs(parseInt(value))!=degrees){
+                 document.getElementById("stupidAlert").classList.toggle("d-none");
+                 correct = false;
+                 return;
+               }
+               else{
+                 document.getElementById("smartAlert").classList.toggle("d-none");
+                 correct = true;
+                 return;
+               }  
+             
+           }
+         }
+         
+         function setNewProblem(){
+           document.getElementById("smartAlert").classList.add("d-none");
+           document.getElementById("stupidAlert").classList.add("d-none");
+           problemType = getRandomInt(2)==1 ? "Sin" : "Cos"; 
+           document.getElementById("problemType").innerHTML=problemType;
+           problemMode = getRandomInt(2)==1 ? "Degrees" : "Radians";
+           document.getElementById("problemMode2").innerHTML= problemMode == "Radians" ? "&#215; &#960; Radians" : "&deg; Degrees";
+           // isNegative = getRandomInt(2)==1 ? true : false;
+           isNegative = false;
+           if(problemMode=="Radians"){
+             radiansNumerator = getRandomInt(12);
+             radiansDenominator = getRandomInt(4)+3;
+             while(radiansNumerator/radiansDenominator>2 || radiansDenominator== 5 || radiansNumerator==radiansDenominator || eval(radiansNumerator/radiansDenominator) % 1 == 0 || eval(radiansNumerator/radiansDenominator) % 0.5 == 0 || (radiansNumerator % 2 ==0 && radiansDenominator % 2 ==0)){
+               radiansNumerator = getRandomInt(12);
+               radiansDenominator = getRandomInt(4)+3;
+             }
+             document.getElementById("problemMode").innerHTML = (isNegative ? "-" : "") + radiansNumerator + "&#960;/" + radiansDenominator + " Radians";
+           }else{
+             degrees = getRandomInt(360)-1;
+           	while(degrees % 90 == 0){
+               degrees = getRandomInt(360)-1;
+             }
+             document.getElementById("problemMode").innerHTML = (isNegative ? "-" : "") + degrees + "&deg; Degrees";
+           }
+           document.getElementById("response").value="";
+           document.getElementById("response").focus();
+         
+         }
+         
+         document.onkeydown = checkKey;
+         
+         function checkKey(e) {
+         
+             e = e || window.event;
+         
+             if (e.keyCode == '38') {
+                 // up arrow
+             }
+             else if (e.keyCode == '40') {
+                 gradeProblem();
+             }
+             else if (e.keyCode == '37') {
+                // left arrow
+             }
+             else if (e.keyCode == '39' && correct) {
+                setNewProblem();
+             }
+         
+         }
+         
+         
+      </script>
+   </body>
+</html>
